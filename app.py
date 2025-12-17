@@ -46,7 +46,7 @@ def get_logs():
         }
     })
 
-@app.route('/<path:path>', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@app.route('/<path:path>', methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD'])
 def honeypot_trap(path):
     ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
     if ip_address and ',' in ip_address:
@@ -64,8 +64,12 @@ def honeypot_trap(path):
             payload_data = str(request.data)
     elif request.form:
         payload_data = str(dict(request.form))
-    elif request.json:
-        payload_data = str(request.json)
+    else:
+        try:
+            if request.is_json and request.json:
+                payload_data = str(request.json)
+        except:
+            pass
     
     ai_response = generate_honeypot_response(method, endpoint, payload_data)
     

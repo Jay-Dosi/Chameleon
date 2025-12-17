@@ -58,7 +58,7 @@ Generate an appropriate JSON response for this API request."""
             return json.dumps(FALLBACK_RESPONSE)
             
     except json.JSONDecodeError:
-        return clean_response(response.text) if response and response.text else json.dumps(FALLBACK_RESPONSE)
+        return json.dumps(FALLBACK_RESPONSE)
     except Exception as e:
         print(f"Gemini API error: {e}")
         return json.dumps(FALLBACK_RESPONSE)
