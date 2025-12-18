@@ -152,9 +152,13 @@ Make sure all environment variables are set in Vercel:
 
 ## Troubleshooting
 
-### Build Fails
+### Build Fails / Dependencies Not Installing
 
-- **Check `requirements.txt`**: Make sure all dependencies are listed
+**Important**: Vercel now uses `uv` package manager and prioritizes `pyproject.toml` over `requirements.txt` if both exist.
+
+- **If you have `pyproject.toml`**: Make sure it includes ALL dependencies (Flask, Groq, etc.)
+- **If you only have `requirements.txt`**: That's fine, Vercel will use it
+- **If both exist**: Vercel will use `pyproject.toml`, so make sure it has all dependencies
 - **Check Python version**: Vercel uses Python 3.11 by default (configured in `runtime.txt`)
 - **Check build logs**: Click on the failed deployment to see detailed error messages
 

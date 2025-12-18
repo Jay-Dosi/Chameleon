@@ -17,6 +17,14 @@ The logs will show the **actual error** that's causing the crash.
 
 #### Issue: Import Error / Module Not Found
 
+**Symptoms**: Error like `ModuleNotFoundError: No module named 'dotenv'` or `ModuleNotFoundError: No module named 'flask'`
+
+**Fix**: 
+- **CRITICAL**: If you have both `pyproject.toml` and `requirements.txt`, Vercel prioritizes `pyproject.toml`
+- Make sure `pyproject.toml` includes ALL dependencies (Flask, Groq, python-dotenv, etc.)
+- Or remove `pyproject.toml` if you only want to use `requirements.txt`
+- Verify all dependencies are listed in the file Vercel is using
+
 **Symptoms**: Error like `ModuleNotFoundError: No module named 'app'`
 
 **Fix**: 

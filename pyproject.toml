@@ -1,8 +1,13 @@
 [project]
-name = "repl-nix-workspace"
+name = "chameleon-honeypot"
 version = "0.1.0"
-description = "Add your description here"
+description = "AI-Powered Dynamic API Honeypot with Groq"
 requires-python = ">=3.11"
 dependencies = [
-    "google-genai>=1.55.0",
+    "flask==3.0.0",
+    "flask-sqlalchemy==3.1.1",
+    "sqlalchemy==2.0.23",
+    "groq>=0.11.0",
+    "httpx>=0.24.0",
+    "python-dotenv==1.0.1",
 ]
