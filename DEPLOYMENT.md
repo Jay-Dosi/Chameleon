@@ -155,14 +155,42 @@ Make sure all environment variables are set in Vercel:
 ### Build Fails
 
 - **Check `requirements.txt`**: Make sure all dependencies are listed
-- **Check Python version**: Vercel uses Python 3.11 by default (configured in `vercel.json`)
+- **Check Python version**: Vercel uses Python 3.11 by default (configured in `runtime.txt`)
 - **Check build logs**: Click on the failed deployment to see detailed error messages
 
-### App Returns 500 Errors
+### App Returns 500 Errors (FUNCTION_INVOCATION_FAILED)
 
-- **Check environment variables**: Make sure `GROQ_API_KEY` is set correctly
-- **Check function logs**: Go to your project → **Deployments** → Click on deployment → **Function Logs**
-- **Test locally first**: Make sure the app works locally before deploying
+This is the most common error. Here's how to fix it:
+
+1. **Check Function Logs**:
+   - Go to your project → **Deployments** → Click on the failed deployment
+   - Click **"Function Logs"** tab
+   - Look for the actual error message (Python traceback)
+
+2. **Common Causes**:
+   - **Missing environment variables**: Make sure `GROQ_API_KEY` and `SESSION_SECRET` are set
+   - **Database initialization error**: The app tries to create SQLite DB in `/tmp` - check logs
+   - **Import errors**: Check if all Python files are in the correct location
+   - **Template/static file paths**: Make sure `templates/` and `static/` folders exist
+
+3. **Debug Steps**:
+   ```bash
+   # Test locally with Vercel CLI
+   npm install -g vercel
+   vercel dev
+   ```
+   This simulates the Vercel environment locally and helps identify issues.
+
+4. **Quick Fixes**:
+   - Ensure `api/index.py` exists and properly imports `app`
+   - Verify `vercel.json` routes are correct
+   - Check that all files are committed to git (Vercel only deploys committed files)
+   - Make sure `requirements.txt` has all dependencies
+
+5. **If Still Failing**:
+   - Check the exact error in Function Logs
+   - Verify environment variables are set for the correct environment (Production/Preview/Development)
+   - Try redeploying after making sure all files are pushed to GitHub
 
 ### Database Not Working
 

@@ -16,16 +16,27 @@ if env_path.exists():
     load_dotenv(dotenv_path=env_path)
 
 
-app = Flask(__name__)
+# Ensure Flask can find templates and static files
+# Get the directory where app.py is located
+app = Flask(__name__, 
+            template_folder=str(BASE_DIR / "templates"),
+            static_folder=str(BASE_DIR / "static"))
 app.secret_key = os.environ.get("SESSION_SECRET", "chameleon-honeypot-secret")
 
 # Database configuration for Vercel serverless environment
 # Vercel provides /tmp directory which is writable in serverless functions
 # For local development, use the instance folder (Flask-recommended pattern)
-if os.environ.get("VERCEL"):
+# Check for Vercel environment (VERCEL or VERCEL_ENV)
+is_vercel = os.environ.get("VERCEL") or os.environ.get("VERCEL_ENV")
+if is_vercel:
     # Running on Vercel - use /tmp for database (ephemeral storage)
     db_path = Path("/tmp") / "honeypot.db"
-    db_path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        db_path.parent.mkdir(parents=True, exist_ok=True)
+    except Exception:
+        # Fallback if /tmp doesn't work
+        db_path = Path("/var/task") / "honeypot.db"
+        db_path.parent.mkdir(parents=True, exist_ok=True)
 else:
     # Local development - use instance folder
     db_path = BASE_DIR / "instance" / "honeypot.db"
@@ -36,9 +47,21 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
 
-with app.app_context():
-    db.create_all()
-    init_groq()
+# Initialize database and Groq client
+# Wrap in try-except to handle initialization errors gracefully
+try:
+    with app.app_context():
+        db.create_all()
+        init_groq()
+except Exception as e:
+    # Log error but don't crash - app can still run with fallback responses
+    import sys
+    import traceback
+    error_msg = f"Warning: Initialization error (non-fatal): {e}"
+    print(error_msg, file=sys.stderr, flush=True)
+    # Only print full traceback in debug mode to avoid log spam
+    if os.environ.get("FLASK_DEBUG") == "1":
+        traceback.print_exc(file=sys.stderr)
 
 @app.route('/')
 def index():
