@@ -250,14 +250,34 @@ Any path other than `/monitor` and `/api/logs` will:
 
 ---
 
-## 7. Deployment Notes
+## 7. Deployment
 
-- Consider putting Chameleon behind a reverse proxy (Nginx, Caddy, etc.) and:
+### 7.1 Deploy to Vercel (Recommended for Public Access)
+
+Chameleon can be easily deployed to Vercel for public access. See **[DEPLOYMENT.md](DEPLOYMENT.md)** for a complete step-by-step guide.
+
+**Quick Summary:**
+1. Push your code to GitHub
+2. Import the repository in Vercel
+3. Add environment variables (`GROQ_API_KEY`, `SESSION_SECRET`)
+4. Deploy!
+
+**Files added for Vercel deployment:**
+- `vercel.json` - Vercel configuration
+- `api/index.py` - Serverless function wrapper
+- `DEPLOYMENT.md` - Complete deployment guide
+
+### 7.2 Other Deployment Options
+
+- **Traditional Server**: Consider putting Chameleon behind a reverse proxy (Nginx, Caddy, etc.) and:
   - Forward `X-Forwarded-For` so IP logging is accurate.
   - Restrict `/monitor` to your IP or VPN.
-- This is a **honeypot**, not an application for serving real users:
-  - Run it isolated from production systems (container, VM, separate network segment).
-  - Treat all incoming data as hostile.
+- **Docker**: Can be containerized and deployed to any container platform.
+- **Cloud Platforms**: Works on AWS, GCP, Azure, DigitalOcean, etc.
+
+**Important**: This is a **honeypot**, not an application for serving real users:
+- Run it isolated from production systems (container, VM, separate network segment).
+- Treat all incoming data as hostile.
 
 ---
 

@@ -19,9 +19,18 @@ if env_path.exists():
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "chameleon-honeypot-secret")
 
-# Store SQLite DB in the instance folder (Flask-recommended pattern)
-db_path = BASE_DIR / "instance" / "honeypot.db"
-db_path.parent.mkdir(parents=True, exist_ok=True)
+# Database configuration for Vercel serverless environment
+# Vercel provides /tmp directory which is writable in serverless functions
+# For local development, use the instance folder (Flask-recommended pattern)
+if os.environ.get("VERCEL"):
+    # Running on Vercel - use /tmp for database (ephemeral storage)
+    db_path = Path("/tmp") / "honeypot.db"
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+else:
+    # Local development - use instance folder
+    db_path = BASE_DIR / "instance" / "honeypot.db"
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 

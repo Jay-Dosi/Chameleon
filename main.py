@@ -1,5 +1,5 @@
 def main():
-    print("Hello from repl-nix-workspace!")
+    print("just the main function, nothing written here, check app.py")
 
 
 if __name__ == "__main__":
