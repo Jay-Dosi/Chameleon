@@ -39,7 +39,6 @@ cover/
 local_settings.py
 db.sqlite3
 *.sqlite3
-instance/
 .webassets-cache
 .scrapy
 docs/_build/
