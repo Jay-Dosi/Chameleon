@@ -329,11 +329,26 @@ The model `llama-3.1-70b-versatile` has been decommissioned
 
 ## 10. Quick Start
 
+### Local Development
+
 1. Clone/download the project.
 2. (Optional) Create and activate a virtualenv.
 3. Run `pip install -r requirements.txt`.
 4. Create `.env` with `GROQ_API_KEY`, `SESSION_SECRET`, `FLASK_DEBUG`.
 5. Run `python app.py`.
 6. Visit `http://localhost:5000/monitor` and start hitting random endpoints to watch the honeypot come alive.
+
+### Testing on Vercel (Deployed Version)
+
+If you've deployed to Vercel:
+
+1. **View Dashboard**: Visit `https://your-project.vercel.app/monitor`
+2. **Test the Honeypot**: Visit any URL like:
+   - `https://your-project.vercel.app/admin`
+   - `https://your-project.vercel.app/api/users`
+   - `https://your-project.vercel.app/secret`
+3. **Watch Dashboard Update**: Go back to `/monitor` and see your requests appear!
+
+See **[TESTING_GUIDE.md](TESTING_GUIDE.md)** for detailed testing instructions.
 
 
