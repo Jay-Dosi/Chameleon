@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
-from flask import Flask, request, redirect, render_template, jsonify, Response
+from flask import Flask, request, redirect, render_template, jsonify, Response, send_from_directory
 from sqlalchemy import func
 
 from ai_engine import generate_honeypot_response, init_groq
@@ -22,6 +22,15 @@ app = Flask(__name__,
             template_folder=str(BASE_DIR / "templates"),
             static_folder=str(BASE_DIR / "static"))
 app.secret_key = os.environ.get("SESSION_SECRET", "chameleon-honeypot-secret")
+
+@app.route('/favicon.ico')
+def favicon():
+    # Serve a static favicon if available to avoid repeated 404s from crawlers
+    try:
+        return send_from_directory(app.static_folder, 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+    except Exception:
+        # Fall back to 404-like response without crashing
+        return ('', 404)
 
 # Database configuration for Vercel serverless environment
 # Vercel provides /tmp directory which is writable in serverless functions
