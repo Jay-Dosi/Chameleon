@@ -349,6 +349,5 @@ If you've deployed to Vercel:
    - `https://your-project.vercel.app/secret`
 3. **Watch Dashboard Update**: Go back to `/monitor` and see your requests appear!
 
-See **[TESTING_GUIDE.md](TESTING_GUIDE.md)** for detailed testing instructions.
 
 
